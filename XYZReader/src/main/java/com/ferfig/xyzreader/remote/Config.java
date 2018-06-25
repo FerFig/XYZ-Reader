@@ -1,4 +1,4 @@
-package com.example.xyzreader.remote;
+package com.ferfig.xyzreader.remote;
 
 import android.util.Log;
 

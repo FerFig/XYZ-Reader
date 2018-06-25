@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.xyzreader"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.ferfig.xyzreader"
     android:versionCode="1"
     android:versionName="1.0">
 
@@ -29,7 +30,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.com.example.xyzreader.items" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.com.ferfig.xyzreader.items" />
             </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -40,7 +41,7 @@
             android:exported="false" />
 
         <provider android:name=".data.ItemsProvider"
-            android:authorities="com.example.xyzreader"
+            android:authorities="com.ferfig.xyzreader"
             android:exported="false" />
 
     </application>
