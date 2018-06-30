@@ -10,6 +10,7 @@ import android.os.RemoteException;
 import android.text.format.Time;
 import android.util.Log;
 
+import com.ferfig.xyzreader.Utils;
 import com.ferfig.xyzreader.remote.RemoteEndpointUtil;
 
 import org.json.JSONArray;
@@ -29,6 +30,10 @@ public class UpdaterService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Time time = new Time();
 
+        if (!Utils.isInternetAvailable(getApplicationContext())){
+            Log.w(TAG, "Not online, not refreshing.");
+            return;
+        }
         // Don't even inspect the intent, we only do one thing, and that's fetch content.
         ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
 
