@@ -1,6 +1,5 @@
 package com.ferfig.xyzreader.ui;
 
-import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -32,9 +31,7 @@ import com.ferfig.xyzreader.data.UpdaterService;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -43,12 +40,14 @@ import java.util.GregorianCalendar;
  * activity presents a grid of items as cards.
  */
 public class ArticleListActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor>, SnackBarAction, SwipeRefreshLayout.OnRefreshListener {
+        LoaderManager.LoaderCallbacks<Cursor>, SnackBarAction, SwipeRefreshLayout.OnRefreshListener, ArticleClick {
 
     private static final String TAG = ArticleListActivity.class.toString();
+    private static int LOADER_ID = 28;
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
+    private GridLayoutManager mRecyclerViewGridLayoutManager;
     private CoordinatorLayout mainCoordinatorLayout;
 
     @Override
@@ -67,18 +66,14 @@ public class ArticleListActivity extends AppCompatActivity implements
         mainCoordinatorLayout = findViewById(R.id.mainCoordinatorLayout);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        getSupportLoaderManager().initLoader(28, null, this);
 
         if (savedInstanceState == null) {
             refresh();
         }
+
+        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        //outState.put
-        super.onSaveInstanceState(outState);
-    }
 
     private void refresh() {
         if (!Utils.isInternetAvailable(getApplicationContext())) {
@@ -91,6 +86,12 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
 
         Utils.StartIntentService(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -108,6 +109,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         super.onStop();
+        getSupportLoaderManager().destroyLoader(LOADER_ID);
         unregisterReceiver(mRefreshingReceiver);
     }
 
@@ -139,15 +141,16 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        Adapter adapter = new Adapter(cursor);
+        Adapter adapter = new Adapter(cursor, this);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
         int numColumns = getResources().getInteger(R.integer.list_column_count);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(
+        mRecyclerViewGridLayoutManager = new GridLayoutManager(
                 this,
                 numColumns,
                 OrientationHelper.VERTICAL,
-                false));
+                false);
+        mRecyclerView.setLayoutManager(mRecyclerViewGridLayoutManager);
     }
 
     @Override
@@ -155,11 +158,25 @@ public class ArticleListActivity extends AppCompatActivity implements
         mRecyclerView.setAdapter(null);
     }
 
+    @Override
+    public void onArticleClick(long thumbnailViewId, ProperSizeImageView view) {
+        Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(
+                this,
+                view,
+                view.getTransitionName()).toBundle();
+
+        startActivity(
+                new Intent(Intent.ACTION_VIEW,ItemsContract.Items.buildItemUri(thumbnailViewId))
+                , bundle);
+    }
+
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
         private Cursor mCursor;
+        private ArticleClick mClickAction;
 
-        public Adapter(Cursor cursor) {
+        public Adapter(Cursor cursor, ArticleClick articleClick) {
             mCursor = cursor;
+            mClickAction = articleClick;
         }
 
         @Override
@@ -175,13 +192,9 @@ public class ArticleListActivity extends AppCompatActivity implements
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(
-                            (Activity)view.getContext(),
-                            vh.thumbnailView,
-                            vh.thumbnailView.getTransitionName()).toBundle();
-                    startActivity(
-                            new Intent(Intent.ACTION_VIEW,ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())))
-                            , bundle);
+                    mClickAction.onArticleClick(
+                            getItemId(vh.getAdapterPosition()),
+                            vh.thumbnailView);
                 }
             });
             return vh;

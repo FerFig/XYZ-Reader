@@ -1,12 +1,16 @@
 package com.ferfig.xyzreader.ui;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -29,6 +33,8 @@ public class ArticlesDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = ArticlesDetailActivity.class.toString();
+
+    private static int LOADER_ID = 27;
 
     private Cursor mCursor;
     private long mSelectedItemId;
@@ -62,10 +68,26 @@ public class ArticlesDetailActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
+        setSupportActionBar(mAppBar);
         mAppBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onSupportNavigateUp();
+                onBackPressed();
+                //onSupportNavigateUp();
+            }
+        });
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        FloatingActionButton share_fab = findViewById(R.id.fabActionShare);
+        share_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO share
             }
         });
 
@@ -73,7 +95,7 @@ public class ArticlesDetailActivity extends AppCompatActivity
             if (getIntent() != null && getIntent().getData() != null) {
                 mSelectedItemId = ItemsContract.Items.getItemId(getIntent().getData());
 
-                getSupportLoaderManager().initLoader(27, null, this);
+                getSupportLoaderManager().initLoader(LOADER_ID, null, this);
             }
         }
     }
@@ -89,7 +111,6 @@ public class ArticlesDetailActivity extends AppCompatActivity
 
         // Select the start ID
         if (mCursor.moveToFirst()) {
-            // TODO: optimize
             while (!mCursor.isAfterLast()) {
                 if (mCursor.getLong(ArticleLoader.Query._ID) == mSelectedItemId) {
                     Picasso.get().load(mCursor.getString(ArticleLoader.Query.PHOTO_URL)).into(mArticleImage);
@@ -111,12 +132,12 @@ public class ArticlesDetailActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        getSupportLoaderManager().restartLoader(27, null, this);
+        getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        getSupportLoaderManager().destroyLoader(27);
+        getSupportLoaderManager().destroyLoader(LOADER_ID);
     }
 }
