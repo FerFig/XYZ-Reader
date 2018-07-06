@@ -16,6 +16,7 @@
 
             <com.ferfig.xyzreader.ui.ProperSizeImageView
                 android:id="@+id/thumbnail"
+                android:transitionName="@string/ImageTransitionName"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:scaleType="centerCrop" />
