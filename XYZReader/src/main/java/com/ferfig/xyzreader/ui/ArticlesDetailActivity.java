@@ -14,17 +14,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ferfig.xyzreader.R;
 import com.ferfig.xyzreader.data.ArticleLoader;
 import com.ferfig.xyzreader.data.ItemsContract;
 import com.squareup.picasso.Picasso;
-
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +35,7 @@ public class ArticlesDetailActivity extends AppCompatActivity
 
     private Cursor mCursor;
     private long mSelectedItemId;
+    private String mArticleTitle;
 
     @BindView(R.id.collapsing_toolbar_layout)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -60,6 +58,9 @@ public class ArticlesDetailActivity extends AppCompatActivity
     @BindView(R.id.article_body)
     TextView mArticleBody;
 
+    @BindView (R.id.fabActionShare)
+    FloatingActionButton faButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,12 +69,10 @@ public class ArticlesDetailActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
-        setSupportActionBar(mAppBar);
         mAppBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
-                //onSupportNavigateUp();
             }
         });
 
@@ -83,11 +82,13 @@ public class ArticlesDetailActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        FloatingActionButton share_fab = findViewById(R.id.fabActionShare);
-        share_fab.setOnClickListener(new View.OnClickListener() {
+        faButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO share
+                startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(ArticlesDetailActivity.this)
+                        .setType("text/plain")
+                        .setText(String.format(getString(R.string.share_msg), mArticleTitle))
+                        .getIntent(), getString(R.string.action_share)));
             }
         });
 
@@ -111,16 +112,11 @@ public class ArticlesDetailActivity extends AppCompatActivity
 
         // Select the start ID
         if (mCursor.moveToFirst()) {
-            while (!mCursor.isAfterLast()) {
-                if (mCursor.getLong(ArticleLoader.Query._ID) == mSelectedItemId) {
-                    Picasso.get().load(mCursor.getString(ArticleLoader.Query.PHOTO_URL)).into(mArticleImage);
-                    mCollapsingToolbarLayout.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
-                    mArticleSubtitle.setText(mCursor.getString(ArticleLoader.Query.AUTHOR));
-                    mArticleBody.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
-                    break;
-                }
-                mCursor.moveToNext();
-            }
+            Picasso.get().load(mCursor.getString(ArticleLoader.Query.PHOTO_URL)).into(mArticleImage);
+            mArticleTitle = mCursor.getString(ArticleLoader.Query.TITLE);
+            mCollapsingToolbarLayout.setTitle(mArticleTitle);
+            mArticleSubtitle.setText(mCursor.getString(ArticleLoader.Query.AUTHOR));
+            mArticleBody.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
         }
     }
 

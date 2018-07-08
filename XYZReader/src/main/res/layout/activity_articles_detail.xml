@@ -12,18 +12,14 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="168dp"
-        android:background="?colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:background="@color/color_primary">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-            app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginStart="72dp"
+            app:contentScrim="@color/color_primary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <FrameLayout
@@ -35,7 +31,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:elevation="4dp"
-                    android:scaleType="centerCrop"
                     android:src="@drawable/logo"
                     android:transitionName="@string/ImageTransitionName"
                     app:layout_collapseMode="parallax" />
@@ -51,8 +46,8 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/app_bar"
                 android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                app:contentInsetStart="72dp"
+                android:layout_height="?attr/actionBarSize"
+                android:elevation="4dp"
                 app:layout_collapseMode="pin"
                 app:navigationIcon="@drawable/ic_arrow_back"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
@@ -65,23 +60,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
+        android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingStart="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/article_subtitle"
+                style="?android:attr/textAppearanceLarge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:paddingTop="4dp"
                 tools:text="Subtitle" />
 
             <TextView
@@ -89,13 +87,11 @@
                 style="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_inner_horiz_margin"
-                android:layout_marginRight="@dimen/detail_inner_horiz_margin"
-                android:paddingBottom="@dimen/detail_body_bottom_margin"
-                android:textColorLink="@color/color_accent"
                 android:autoLink="all"
+                android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
+                android:textColorLink="@color/color_accent"
                 android:textSize="@dimen/detail_body_text_size"
-                android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier" />
+                tools:text="kldsfgj sdflkgj dfkgj dsfklgj dfklgj sdklfgj sdfklgj sdlfkgj sdlkfgj sdfklgj çsdlfkgsjdfkl jgoirhgsudthg dhfg udhisd hiuasdfhg ag uabruiybfiurbgy iurbgr" />
 
         </LinearLayout>
 
@@ -104,8 +100,9 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabActionShare"
         style="@style/ShareFabStyle"
-        app:pressedTranslationZ="@dimen/fab_press_translation_z"
+        app:elevation="4dp"
         app:layout_anchor="@+id/app_bar_layout"
-        app:layout_anchorGravity="right|end|bottom" />
+        app:layout_anchorGravity="right|end|bottom"
+        app:pressedTranslationZ="@dimen/fab_press_translation_z" />
 
 </android.support.design.widget.CoordinatorLayout>

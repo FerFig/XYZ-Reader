@@ -33,6 +33,9 @@ import com.squareup.picasso.Picasso;
 import java.text.ParseException;
 import java.util.Date;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * An activity representing a list of Articles. This activity has different presentations for
  * handset and tablet-size devices. On handsets, the activity presents a list of items, which when
@@ -44,36 +47,37 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private static final String TAG = ArticleListActivity.class.toString();
     private static int LOADER_ID = 28;
-    private Toolbar mToolbar;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mRecyclerView;
-    private GridLayoutManager mRecyclerViewGridLayoutManager;
-    private CoordinatorLayout mainCoordinatorLayout;
+
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
+
+    @BindView (R.id.swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
+    @BindView (R.id.mainCoordinatorLayout)
+    CoordinatorLayout mainCoordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_article_list);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
 
-        //final View toolbarContainerView = findViewById(R.id.toolbar_container);
-        //toolbarContainerView.getLayoutParams().height = mToolbar.getHeight();
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
-        mainCoordinatorLayout = findViewById(R.id.mainCoordinatorLayout);
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         if (savedInstanceState == null) {
             refresh();
         }
 
-        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        Loader<String> existingLoaders = getSupportLoaderManager().getLoader(LOADER_ID);
+        if (existingLoaders != null ) {
+            getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+        }else{
+            getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        }
     }
-
 
     private void refresh() {
         if (!Utils.isInternetAvailable(getApplicationContext())) {
@@ -86,12 +90,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
 
         Utils.StartIntentService(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -109,7 +107,6 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-        getSupportLoaderManager().destroyLoader(LOADER_ID);
         unregisterReceiver(mRefreshingReceiver);
     }
 
@@ -145,12 +142,14 @@ public class ArticleListActivity extends AppCompatActivity implements
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
         int numColumns = getResources().getInteger(R.integer.list_column_count);
-        mRecyclerViewGridLayoutManager = new GridLayoutManager(
+        GridLayoutManager mRecyclerViewGridLayoutManager = new GridLayoutManager(
                 this,
                 numColumns,
                 OrientationHelper.VERTICAL,
                 false);
         mRecyclerView.setLayoutManager(mRecyclerViewGridLayoutManager);
+
+        //getSupportLoaderManager().destroyLoader(LOADER_ID);
     }
 
     @Override
@@ -247,9 +246,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         public ViewHolder(View view) {
             super(view);
-            thumbnailView = (ProperSizeImageView) view.findViewById(R.id.thumbnail);
-            titleView = (TextView) view.findViewById(R.id.article_title);
-            subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
+            thumbnailView = view.findViewById(R.id.thumbnail);
+            titleView = view.findViewById(R.id.article_title);
+            subtitleView = view.findViewById(R.id.article_subtitle);
         }
     }
 }
