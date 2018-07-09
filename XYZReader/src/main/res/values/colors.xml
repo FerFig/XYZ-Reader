@@ -20,10 +20,6 @@
     <color name="color_primary_dark">#E64A19</color>
     <color name="color_accent">#00BCD4</color>
     <color name="color_primary_light">#FFCCBC</color>
-    <color name="color_primary_text">#212121</color>
-    <color name="color_secondary_text">#757575</color>
-    <color name="color_icons">#FFFFFF</color>
-    <color name="color_divider">#BDBDBD</color>
 
     <color name="black_overlay">#66000000</color>
 </resources>

@@ -27,10 +27,7 @@ public class Utils {
     public static boolean isInternetAvailable(Context context){
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
-        if (ni == null || !ni.isConnected()) {
-            return false;
-        }
-        return true;
+        return ni != null && ni.isConnected();
     }
 
     public static void showSnackBar(View container, String message, String action, int duration, final SnackBarAction mCallback){
