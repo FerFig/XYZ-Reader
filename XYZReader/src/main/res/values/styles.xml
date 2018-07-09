@@ -48,7 +48,7 @@
     <style name="FullscreenTheme" parent="XYZ.Theme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/text_size</item>
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
     </style>
 
@@ -70,10 +70,9 @@
         <item name="android:layout_height">56dp</item>
         <item name="android:layout_margin">@dimen/fab_margin</item>
         <item name="android:src">@drawable/ic_share</item>
+        <item name="android:translationZ">@dimen/fab_translation_z</item>
         <item name="borderWidth">0dp</item>
-        <item name="elevation">@dimen/fab_elevation</item>
-        <item name="pressedTranslationZ">12dp</item>
         <item name="rippleColor">@color/color_primary_light</item>
+        <item name="elevation">@dimen/fab_elevation</item>
     </style>
-
 </resources>

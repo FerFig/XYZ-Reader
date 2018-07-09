@@ -1,8 +1,8 @@
 <resources>
-    <!-- detail -->
-
-    <dimen name="fab_elevation">2dp</dimen>
-    <dimen name="fab_press_translation_z">6dp</dimen>
+    <dimen name="fab_elevation">6dp</dimen>
+    <dimen name="fab_translation_z">12dp</dimen>
+    <dimen name="fab_pressed_translation_z">12dp</dimen>
     <dimen name="fab_margin">24dp</dimen>
 
+    <dimen name="text_size">20sp</dimen>
 </resources>
