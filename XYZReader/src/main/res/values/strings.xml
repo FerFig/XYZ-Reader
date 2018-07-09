@@ -15,4 +15,5 @@
     <string name="retry_internet_connection">RETRY</string>
 
     <string name="share_msg">Check the article \'%1$s\' in \"XYZ Reader App\"</string>
+    <string name="by_prefix">By:</string>
 </resources>

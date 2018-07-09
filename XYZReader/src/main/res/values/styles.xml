@@ -32,7 +32,6 @@
         <item name="android:paddingLeft">@dimen/list_side_margin</item>
         <item name="android:paddingRight">@dimen/list_side_margin</item>
         <item name="android:paddingBottom">@dimen/list_vertical_margin</item>
-        <item name="android:clipToPadding">false</item>
         <item name="android:scrollbarStyle">outsideOverlay</item>
         <item name="layout_behavior">@string/appbar_scrolling_view_behavior</item>
     </style>
@@ -42,20 +41,28 @@
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:foreground">?selectableItemBackground</item>
-        <item name="cardCornerRadius">6dp</item>
+        <item name="cardCornerRadius">4dp</item>
         <item name="cardElevation">4dp</item>
     </style>
 
     <style name="FullscreenTheme" parent="XYZ.Theme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
     </style>
 
     <style name="FullscreenActionBarStyle" parent="android:Widget.Holo.ActionBar">
         <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="XYZ.Theme.DetailCardView" parent="android:Widget">
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+        <item name="cardCornerRadius">4dp</item>
+        <item name="cardElevation">4dp</item>
     </style>
 
     <style name="ShareFabStyle">

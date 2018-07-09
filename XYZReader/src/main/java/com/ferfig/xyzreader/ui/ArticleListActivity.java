@@ -1,6 +1,5 @@
 package com.ferfig.xyzreader.ui;
 
-import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -16,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -159,14 +157,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onArticleClick(long thumbnailViewId, ProperSizeImageView view) {
-        Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(
-                this,
-                view,
-                view.getTransitionName()).toBundle();
-
         startActivity(
                 new Intent(Intent.ACTION_VIEW,ItemsContract.Items.buildItemUri(thumbnailViewId))
-                , bundle);
+                );
     }
 
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
@@ -230,6 +223,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                         + "<br/>" + " by "
                         + mCursor.getString(ArticleLoader.Query.AUTHOR)));
             }
+
             Picasso.get().load(mCursor.getString(ArticleLoader.Query.THUMB_URL)).into(holder.thumbnailView);
         }
 

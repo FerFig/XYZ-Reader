@@ -2,6 +2,7 @@ package com.ferfig.xyzreader.ui;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -30,6 +31,7 @@ public class ArticlesDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = ArticlesDetailActivity.class.toString();
+    private static final String SHARE_TYPE = "text/plain";
 
     private static int LOADER_ID = 27;
 
@@ -50,7 +52,7 @@ public class ArticlesDetailActivity extends AppCompatActivity
     Toolbar mAppBar;
 
     @BindView(R.id.article_image)
-    ProperSizeImageView mArticleImage;
+    ImageView mArticleImage;
 
     @BindView(R.id.article_subtitle)
     TextView mArticleSubtitle;
@@ -76,6 +78,8 @@ public class ArticlesDetailActivity extends AppCompatActivity
             }
         });
 
+        mArticleBody.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Roboto-Regular.ttf"));
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(true);
@@ -86,7 +90,7 @@ public class ArticlesDetailActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(ArticlesDetailActivity.this)
-                        .setType("text/plain")
+                        .setType(SHARE_TYPE)
                         .setText(String.format(getString(R.string.share_msg), mArticleTitle))
                         .getIntent(), getString(R.string.action_share)));
             }
@@ -115,7 +119,7 @@ public class ArticlesDetailActivity extends AppCompatActivity
             Picasso.get().load(mCursor.getString(ArticleLoader.Query.PHOTO_URL)).into(mArticleImage);
             mArticleTitle = mCursor.getString(ArticleLoader.Query.TITLE);
             mCollapsingToolbarLayout.setTitle(mArticleTitle);
-            mArticleSubtitle.setText(mCursor.getString(ArticleLoader.Query.AUTHOR));
+            mArticleSubtitle.setText(getString(R.string.by_prefix).concat(mCursor.getString(ArticleLoader.Query.AUTHOR)));
             mArticleBody.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
         }
     }
