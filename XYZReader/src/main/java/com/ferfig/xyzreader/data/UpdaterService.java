@@ -5,8 +5,6 @@ import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.OperationApplicationException;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.text.format.Time;
